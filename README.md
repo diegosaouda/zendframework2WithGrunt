@@ -6,9 +6,9 @@ Realizando build
 Deve ter instalado o node.js
 
 para instalar as dependências do grunt, executar
-# npm install
+\# npm install
 
 para regalizar o build do zend framework 2, onde o html será minificado images, js, css, executar
-# grunt build
+\# grunt build
 
 
