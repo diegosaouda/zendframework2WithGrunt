@@ -1,24 +1,21 @@
 {
-  "name": "zend2",
+  "name": "zend-framework-2-com-grunt",
   "version": "0.0.0",
-  "description": "Teste de Build de Zend 2 com Grunt",
+  "description": "Realizando Build de um projeto zend framework 2 utilizando gruntjs",
   "main": "Gruntfile.js",
-  "dependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-copy": "~0.5.0"
-  },
   "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-clean": "^0.5.0",
     "grunt-contrib-htmlmin": "^0.2.0",
     "grunt-usemin": "^2.0.2",
     "grunt-contrib-cssmin": "^0.9.0",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-rev": "^0.1.0",
-    "grunt-contrib-concat": "^0.3.0"
+    "grunt-contrib-concat": "^0.3.0",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-contrib-imagemin": "^0.5.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  "author": "Diego Saouda <diegosaouda@gmail.com>",
+  "license": "BSD"
 }

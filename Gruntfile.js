@@ -1,37 +1,33 @@
 module.exports = function(grunt) {
 	
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-htmlmin');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-usemin');
-  grunt.loadNpmTasks('grunt-rev');
+  //carregando automaticamente
+  require('load-grunt-tasks')(grunt);
   
   grunt.initConfig({
     
     //limpar o prod
     clean: {
-      prod: { src: ['prod'] }
+      build: { src: 'build' },
+      temp: { src: '.tmp' }
     },
       
     //copiar os arquivos para prod  
     copy: {
-      prod: {
+      build: {
         files: [{
-          expand: true,
-          dot: true,
-          cwd: 'dev',
-          dest: 'prod',
-          src: ['**/*']
-        }]
-      }
+            expand: true,
+              src: ['init_autoloader.php', 'config/**', 'module/**', 'public/index.php', 'public/img/**', 'public/.htaccess', 'vendor/**'],
+              dest: 'build/'
+        }],
+        options: {
+          dot: true
+        }
+      },
     },
     
     //realiza o min dos html
     htmlmin: {
-      prod: {
+      build: {
         options: {
           collapseWhitespace: true,
           collapseBooleanAttributes: true,
@@ -44,9 +40,9 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'prod/module/Application/view',
+          cwd: 'build/module/Application/view',
           src: ['**/*.phtml'],
-          dest: 'prod/module/Application/view'
+          dest: 'build/module/Application/view'
         }]
       }
     },
@@ -54,48 +50,62 @@ module.exports = function(grunt) {
     
     //Lib usemin e useminPrepare lê o html e  faz o min, concat, de acordo com a tag especificada
     useminPrepare: {
-      html: 'prod/module/Application/view/layout/layout.phtml',
+      html: 'build/module/Application/view/layout/layout.phtml',
       options: {
-        dest: 'prod/public'
+        dest: 'build/public'
       }
     },
     
     usemin: {
-      html: ['prod/module/Application/view/layout/layout.phtml'],
+      html: ['build/module/Application/view/layout/layout.phtml'],
       options: {
-        assetsDirs: ['prod/public']
+        assetsDirs: ['build/public']
       }
     },
     
     //renomear os arquivos para cache no navegador
     //o nome do arquivo vai com um hash
     rev: {
-      prod: { //nome da target
+      build: { //nome da target
         files: {
           src: [
-            'prod/public/{,*/}*.css',
-            'prod/public/{,*/}*.js',
-            'prod/public/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+            'build/public/{,*/}*.css',
+            'build/public/{,*/}*.js',
+            'build/public/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
           ]
         }
+      }
+    },
+    
+    //min images
+    imagemin: {
+      build: {
+        files: [{
+          expand: true,
+          cwd: 'public',
+          src: '{,*/}*.{png,jpg,jpeg,gif}',
+          dest: 'build/public'
+        }]
       }
     },
     
   });
   
   //tarefa de preview
-  grunt.registerTask('prod', [
-    'clean:prod',  
-    'copy:prod',
-    'useminPrepare',
+  grunt.registerTask('build', [
+    'clean:build', //limpar o build antigo 
+    'copy:build', //copiar os arquivos para o build
+    'useminPrepare', //preparando os build de css, js ...
     
-    'concat',
-    'cssmin',
-    'uglify',
-    'rev',
+    'imagemin:build', //min images
+    'concat', //concatena os arquivos
+    'cssmin', //faz o min de css
+    'uglify', //faz o min de js
+    'rev', //gera um nome baseado em hash (para cache do navegador)
     
-    'usemin',
-    'htmlmin:prod'
+    'usemin', //faz o processamento do min
+    'htmlmin:build', //min do html
+    'clean:temp' //limpa diretorios temporarios
   ]);
   
 };
